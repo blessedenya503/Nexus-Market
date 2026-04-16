@@ -1,0 +1,112 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Platform users (customers, vendors, admins)",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string", "format": "uri" },
+        "role": { "type": "string", "enum": ["customer", "vendor", "admin"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role", "createdAt"]
+    },
+    "Vendor": {
+      "title": "Vendor",
+      "description": "Vendor profile information",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "User ID of the vendor" },
+        "storeName": { "type": "string" },
+        "description": { "type": "string" },
+        "logoURL": { "type": "string", "format": "uri" },
+        "status": { "type": "string", "enum": ["pending", "approved", "suspended"] },
+        "revenue": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "storeName", "status", "createdAt"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Products listed on the platform",
+      "type": "object",
+      "properties": {
+        "vendorId": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "price": { "type": "number" },
+        "category": { "type": "string" },
+        "images": { "type": "array", "items": { "type": "string" } },
+        "stock": { "type": "integer" },
+        "rating": { "type": "number" },
+        "reviewCount": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["vendorId", "name", "price", "category", "stock", "createdAt"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Product categories",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "slug": { "type": "string" },
+        "icon": { "type": "string" }
+      },
+      "required": ["name", "slug"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Customer orders",
+      "type": "object",
+      "properties": {
+        "customerId": { "type": "string" },
+        "totalAmount": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "paid", "shipped", "delivered", "cancelled"] },
+        "shippingAddress": { "type": "object" },
+        "paymentId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["customerId", "totalAmount", "status", "createdAt"]
+    },
+    "OrderItem": {
+      "title": "OrderItem",
+      "description": "Individual items in an order",
+      "type": "object",
+      "properties": {
+        "orderId": { "type": "string" },
+        "productId": { "type": "string" },
+        "vendorId": { "type": "string" },
+        "quantity": { "type": "integer" },
+        "priceAtPurchase": { "type": "number" }
+      },
+      "required": ["orderId", "productId", "vendorId", "quantity", "priceAtPurchase"]
+    },
+    "Review": {
+      "title": "Review",
+      "description": "Product reviews",
+      "type": "object",
+      "properties": {
+        "productId": { "type": "string" },
+        "customerId": { "type": "string" },
+        "customerName": { "type": "string" },
+        "rating": { "type": "integer" },
+        "comment": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["productId", "customerId", "rating", "createdAt"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": { "schema": "User", "description": "User profiles" },
+    "vendors/{vendorId}": { "schema": "Vendor", "description": "Vendor details" },
+    "products/{productId}": { "schema": "Product", "description": "Product listings" },
+    "categories/{categoryId}": { "schema": "Category", "description": "Product categories" },
+    "orders/{orderId}": { "schema": "Order", "description": "Customer orders" },
+    "orders/{orderId}/items/{itemId}": { "schema": "OrderItem", "description": "Items in an order" },
+    "products/{productId}/reviews/{reviewId}": { "schema": "Review", "description": "Product reviews" }
+  }
+}
